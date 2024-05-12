@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/authRoutes");
 const profileRoutes = require("./routes/profileRoutes");
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json'); 
+
 
 const app = express();
 
@@ -12,6 +15,10 @@ app.use(bodyParser.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api", profileRoutes);
+
+
+//swaggerUi
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // MongoDB connection
 mongoose.connect("mongodb://localhost:27017/auth_demo")

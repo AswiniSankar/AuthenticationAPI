@@ -1,0 +1,269 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Authentication API",
+    "version": "1.0.0",
+    "description": "API for user authentication and profile management",
+    "securityDefinitions": {
+        "BearerAuth": {
+          "type": "apiKey",
+          "name": "Authorization",
+          "in": "header",
+          "description": "JWT token"
+        }
+      }
+      
+  },
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "Endpoints related to user authentication"
+    },
+    {
+      "name": "Profile",
+      "description": "Endpoints related to user profiles"
+    }
+  ],
+  
+  "securityDefinitions": {
+    "BearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT token"
+    }
+  },
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Register a new user",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "User registration details",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": "Username of the user"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "Email address of the user"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "Password of the user"
+                },
+                "profileVisibility":{
+                    "type": "boolean",
+                    "description": "Profile visibility of the user"
+                },
+                "isAdmin":{
+                    "type": "boolean",
+                    "description": "Profile visibility of the user"
+                },
+                "phone":{
+                    "type": "string",
+                    "description": "Phone number of the user"
+                },
+                "bio":{
+                    "type": "string",
+                    "description": "Bio of the user"
+                },
+                "photo":{
+                    "type": "string",
+                    "description": "Profile photo of the user"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User registered successfully"
+          },
+          "400": {
+            "description": "User already exists"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Authenticate user",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "User login details",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "description": "Email address of the user"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "Password of the user"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful login",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "token": {
+                  "type": "string",
+                  "description": "JWT token for authentication"
+                },
+                "userId": {
+                  "type": "string",
+                  "description": "User ID of the authenticated user"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/profile": {
+      "get": {
+        "tags": ["Profile"],
+        "summary": "Get user profile",
+        "security": [
+            {
+              "BearerAuth": []
+            }
+          ],
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of user profile",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "string",
+                  "description": "Username of the user"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "Email address of the user"
+                },
+                "profileVisibility":{
+                    "type": "boolean",
+                    "description": "Updated Profile visibility"
+                },
+                "phone":{
+                    "type": "string",
+                    "description": "Updated Phone number"
+                },
+                "bio":{
+                    "type": "string",
+                    "description": "Updated Bio"
+                },
+                "photo":{
+                    "type": "string",
+                    "description": "Updated Profile"
+                }
+
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/profile/{username}": {
+        "put": {
+          "tags": ["Profile"],
+          "summary": "Update user profile",
+          "parameters": [
+            {
+              "name": "username",
+              "in": "path",
+              "description": "Username of the user whose profile is to be updated",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "body",
+              "in": "body",
+              "description": "Updated profile details",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "Updated email address of the user"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "Updated password of the user"
+                  },
+                  "profileVisibility": {
+                    "type": "boolean",
+                    "description": "Updated profile visibility of the user"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "description": "Updated phone number of the user"
+                  },
+                  "bio": {
+                    "type": "string",
+                    "description": "Updated bio of the user"
+                  },
+                  "photo": {
+                    "type": "string",
+                    "description": "Updated profile photo URL of the user"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Profile updated successfully"
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500": {
+              "description": "Internal Server Error"
+            }
+          }
+        }
+      }
+  }
+  
+}
